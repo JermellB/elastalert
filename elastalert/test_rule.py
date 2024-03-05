@@ -5,7 +5,6 @@ import copy
 import datetime
 import json
 import logging
-import random
 import re
 import string
 import sys
@@ -19,6 +18,7 @@ from elastalert.util import elasticsearch_client
 from elastalert.util import lookup_es_key
 from elastalert.util import ts_now
 from elastalert.util import ts_to_dt
+import secrets
 
 logging.getLogger().setLevel(logging.INFO)
 logging.getLogger('elasticsearch').setLevel(logging.WARNING)
@@ -252,7 +252,7 @@ class MockElastAlerter(object):
             used_ids = []
 
             def get_id():
-                _id = ''.join([random.choice(string.ascii_letters) for i in range(16)])
+                _id = ''.join([secrets.SystemRandom().choice(string.ascii_letters) for i in range(16)])
                 if _id in used_ids:
                     return get_id()
                 used_ids.append(_id)
