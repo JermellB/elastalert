@@ -186,7 +186,7 @@ class MockElastAlerter(object):
             fields_to_remove = []
             for field in doc:
                 if field != '_id':
-                    if not any([re.match(incl.replace('*', '.*'), field) for incl in rule['include']]):
+                    if not any(re.match(incl.replace('*', '.*'), field) for incl in rule['include']):
                         fields_to_remove.append(field)
             list(map(doc.pop, fields_to_remove))
 

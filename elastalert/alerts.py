@@ -2131,7 +2131,7 @@ class HiveAlerter(Alerter):
                         rule_data_keys = re.findall(r'\{rule\[([^\]]*)\]', match_data_key)
                         data_keys = match_data_keys + rule_data_keys
                         context_keys = list(context['match'].keys()) + list(context['rule'].keys())
-                        if all([True if k in context_keys else False for k in data_keys]):
+                        if all(True if k in context_keys else False for k in data_keys):
                             artifact = {'tlp': 2, 'tags': [], 'message': None, 'dataType': observable_type,
                                         'data': match_data_key.format(**context)}
                             artifacts.append(artifact)
