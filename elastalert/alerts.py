@@ -1035,11 +1035,11 @@ class HipChatAlerter(Alerter):
                     data=json.dumps(ping_msg, cls=DateTimeEncoder),
                     headers=headers,
                     verify=not self.hipchat_ignore_ssl_errors,
-                    proxies=proxies)
+                    proxies=proxies, timeout=60)
 
             response = requests.post(self.url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers,
                                      verify=not self.hipchat_ignore_ssl_errors,
-                                     proxies=proxies)
+                                     proxies=proxies, timeout=60)
             warnings.resetwarnings()
             response.raise_for_status()
         except RequestException as e:
@@ -1091,7 +1091,7 @@ class MsTeamsAlerter(Alerter):
 
         for url in self.ms_teams_webhook_url:
             try:
-                response = requests.post(url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies)
+                response = requests.post(url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies, timeout=60)
                 response.raise_for_status()
             except RequestException as e:
                 raise EAException("Error posting to ms teams: %s" % e)
@@ -1322,7 +1322,7 @@ class MattermostAlerter(Alerter):
                 response = requests.post(
                     url, data=json.dumps(payload, cls=DateTimeEncoder),
                     headers=headers, verify=not self.mattermost_ignore_ssl_errors,
-                    proxies=proxies)
+                    proxies=proxies, timeout=60)
 
                 warnings.resetwarnings()
                 response.raise_for_status()
@@ -1418,8 +1418,8 @@ class PagerDutyAlerter(Alerter):
                 self.url,
                 data=json.dumps(payload, cls=DateTimeEncoder, ensure_ascii=False),
                 headers=headers,
-                proxies=proxies
-            )
+                proxies=proxies, 
+            timeout=60)
             response.raise_for_status()
         except RequestException as e:
             raise EAException("Error posting to pagerduty: %s" % e)
@@ -1492,7 +1492,7 @@ class PagerTreeAlerter(Alerter):
         }
 
         try:
-            response = requests.post(self.url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies)
+            response = requests.post(self.url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies, timeout=60)
             response.raise_for_status()
         except RequestException as e:
             raise EAException("Error posting to PagerTree: %s" % e)
@@ -1590,7 +1590,7 @@ class VictorOpsAlerter(Alerter):
             payload["entity_id"] = self.victorops_entity_id
 
         try:
-            response = requests.post(self.url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies)
+            response = requests.post(self.url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies, timeout=60)
             response.raise_for_status()
         except RequestException as e:
             raise EAException("Error posting to VictorOps: %s" % e)
@@ -1638,7 +1638,7 @@ class TelegramAlerter(Alerter):
         }
 
         try:
-            response = requests.post(self.url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies, auth=auth)
+            response = requests.post(self.url, data=json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies, auth=auth, timeout=60)
             warnings.resetwarnings()
             response.raise_for_status()
         except RequestException as e:
@@ -1730,7 +1730,7 @@ class GoogleChatAlerter(Alerter):
         headers = {'content-type': 'application/json'}
         for url in self.googlechat_webhook_url:
             try:
-                response = requests.post(url, data=json.dumps(message), headers=headers)
+                response = requests.post(url, data=json.dumps(message), headers=headers, timeout=60)
                 response.raise_for_status()
             except RequestException as e:
                 raise EAException("Error posting to google chat: {}".format(e))
@@ -1764,7 +1764,7 @@ class GitterAlerter(Alerter):
         }
 
         try:
-            response = requests.post(self.gitter_webhook_url, json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies)
+            response = requests.post(self.gitter_webhook_url, json.dumps(payload, cls=DateTimeEncoder), headers=headers, proxies=proxies, timeout=60)
             response.raise_for_status()
         except RequestException as e:
             raise EAException("Error posting to Gitter: %s" % e)
@@ -1822,8 +1822,8 @@ class ServiceNowAlerter(Alerter):
                 auth=(self.rule['username'], self.rule['password']),
                 headers=headers,
                 data=json.dumps(payload, cls=DateTimeEncoder),
-                proxies=proxies
-            )
+                proxies=proxies, 
+            timeout=60)
             response.raise_for_status()
         except RequestException as e:
             raise EAException("Error posting to ServiceNow: %s" % e)
@@ -1877,7 +1877,7 @@ class AlertaAlerter(Alerter):
         alerta_payload = self.get_json_payload(matches[0])
 
         try:
-            response = requests.post(self.url, data=alerta_payload, headers=headers, verify=self.verify_ssl)
+            response = requests.post(self.url, data=alerta_payload, headers=headers, verify=self.verify_ssl, timeout=60)
             response.raise_for_status()
         except RequestException as e:
             raise EAException("Error posting to Alerta: %s" % e)
@@ -2066,7 +2066,7 @@ class StrideAlerter(Alerter):
             response = requests.post(
                 self.url, data=json.dumps(payload, cls=DateTimeEncoder),
                 headers=headers, verify=not self.stride_ignore_ssl_errors,
-                proxies=proxies)
+                proxies=proxies, timeout=60)
             warnings.resetwarnings()
             response.raise_for_status()
         except RequestException as e:
@@ -2099,7 +2099,7 @@ class LineNotifyAlerter(Alerter):
             "message": body
         }
         try:
-            response = requests.post("https://notify-api.line.me/api/notify", data=payload, headers=headers)
+            response = requests.post("https://notify-api.line.me/api/notify", data=payload, headers=headers, timeout=60)
             response.raise_for_status()
         except RequestException as e:
             raise EAException("Error posting to Line Notify: %s" % e)
@@ -2173,7 +2173,7 @@ class HiveAlerter(Alerter):
             headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer {}'.format(connection_details.get('hive_apikey', ''))}
             proxies = connection_details.get('hive_proxies', {'http': '', 'https': ''})
             verify = connection_details.get('hive_verify', False)
-            response = requests.post(req, headers=headers, data=alert_body, proxies=proxies, verify=verify)
+            response = requests.post(req, headers=headers, data=alert_body, proxies=proxies, verify=verify, timeout=60)
 
             if response.status_code != 201:
                 raise Exception('alert not successfully created in TheHive\n{}'.format(response.text))
