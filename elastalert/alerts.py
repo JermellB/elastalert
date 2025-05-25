@@ -39,6 +39,7 @@ from .util import pretty_ts
 from .util import resolve_string
 from .util import ts_now
 from .util import ts_to_dt
+from security import safe_command
 
 
 class DateTimeEncoder(json.JSONEncoder):
@@ -912,7 +913,7 @@ class CommandAlerter(Alerter):
 
         # Run command and pipe data
         try:
-            subp = subprocess.Popen(command, stdin=subprocess.PIPE, shell=self.shell)
+            subp = safe_command.run(subprocess.Popen, command, stdin=subprocess.PIPE, shell=self.shell)
 
             if self.rule.get('pipe_match_json'):
                 match_json = json.dumps(matches, cls=DateTimeEncoder) + '\n'
