@@ -5,7 +5,6 @@ import datetime
 import json
 import logging
 import os
-import random
 import signal
 import sys
 import threading
@@ -53,6 +52,7 @@ from .util import ts_add
 from .util import ts_now
 from .util import ts_to_dt
 from .util import unix_to_dt
+import secrets
 
 
 class ElastAlerter(object):
@@ -1036,7 +1036,7 @@ class ElastAlerter(object):
                                      id=new_rule['name'],
                                      max_instances=1,
                                      jitter=5)
-        job.modify(next_run_time=datetime.datetime.now() + datetime.timedelta(seconds=random.randint(0, 15)))
+        job.modify(next_run_time=datetime.datetime.now() + datetime.timedelta(seconds=secrets.SystemRandom().randint(0, 15)))
 
         return new_rule
 
