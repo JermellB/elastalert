@@ -112,7 +112,7 @@ class OpsGenieAlerter(Alerter):
         proxies = {'https': self.opsgenie_proxy} if self.opsgenie_proxy else None
 
         try:
-            r = requests.post(self.to_addr, json=post, headers=headers, proxies=proxies)
+            r = requests.post(self.to_addr, json=post, headers=headers, proxies=proxies, timeout=60)
 
             logging.debug('request response: {0}'.format(r))
             if r.status_code != 202:
